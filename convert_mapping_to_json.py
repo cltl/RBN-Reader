@@ -5,7 +5,7 @@ Usage:
   convert_mapping_to_json.py --path_to_excel=<path_to_excel> --json_output_path=<json_output_path>
 
 Example:
-    python convert_mapping_to_json.py --path_to_excel="resources/Mapping.xlsx" --json_output_path="resources/mapping.json"
+    python convert_mapping_to_json.py --path_to_excel="mapping_to_fn/Mapping.xlsx" --json_output_path="mapping_to_fn/mapping.json"
 """
 import pandas
 import os
