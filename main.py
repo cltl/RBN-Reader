@@ -16,7 +16,6 @@ for le_xml_obj in doc.xpath('Lexicon/LexicalEntry'):
     mw = '-mwe-' in id_
 
     le_obj = LE(id_, le_xml_obj, mw, verbose=verbose)
-    key = (le_obj.lemma, le_obj.pos)
 
     if le_obj.lemma.startswith('-'):
         continue
