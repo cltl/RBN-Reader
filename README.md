@@ -16,13 +16,9 @@ pip install -r requirements.txt
 
 ## How to use
 ```bash
-python main.py
+python main.py -h
 ```
-
-The stdout of the script will be provide information about where the output is stored.
-
-## Possible extentions
-* to be included
+For more information about how to use.
 
 ## Authors
 

@@ -34,7 +34,12 @@ class LE:
     """
 
     """
-    def __init__(self, id_, le_xml_obj, mw, verbose=0):
+    def __init__(self, id_,
+                 le_xml_obj,
+                 mw,
+                 namespace,
+                 abbreviated_namespace,
+                 verbose=0):
 
         self.id_ = id_
         self.mw = mw
@@ -59,8 +64,14 @@ class LE:
             self.rbn_feature_set = self.get_rbn_feature_set(le_xml_obj)
             self.separable = self.get_separable(le_xml_obj)
 
+        self.namespace = namespace
+        self.abbreviated_namespace = abbreviated_namespace
+        self.full_rdf_uri = f'{self.namespace}RBN-{self.id_}'
+        self.short_rdf_uri = f'{self.abbreviated_namespace}:RBN-{self.id_}'
+
+
     def __str__(self):
-        return f'{self.id_}, mw:{self.mw}, {self.lemma}, {self.rbn_pos}, {self.rbn_type}, {self.rbn_feature_set}'
+        return f'{self.short_rdf_uri}, mw:{self.mw}, {self.lemma}, {self.rbn_pos}, {self.rbn_type}, {self.rbn_feature_set}'
 
     def get_lemma(self, le_xml_obj):
         if self.mw:
