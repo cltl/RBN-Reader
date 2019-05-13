@@ -20,6 +20,9 @@ python main.py -h
 ```
 For more information about how to use.
 
+## TODO
+* implement *Relations_to_use*
+
 ## Authors
 
 * **Marten Postma** (m.c.postma@vu.nl)
