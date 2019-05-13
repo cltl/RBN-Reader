@@ -8,10 +8,10 @@ Options:
     --input_path=<input_path> 'resources/final/cornettoLMF2.11.xml'
     --output_path=<output_path> 'output/rbn.p'
     --namespace=<namespace> the RDF namespace, e.g., http://premon.fbk.eu/resource/
-    --short_namespace=<short_namespace> e.g., pb
+    --short_namespace=<short_namespace> e.g., pm
 
 Example:
-    python main.py --input_path="resources/final/cornettoLMF2.11.xml" --output_path="output/rbn.p" --namespace="http://premon.fbk.eu/resource/" --short_namespace="pb"
+    python main.py --input_path="resources/final/cornettoLMF2.11.xml" --output_path="output/rbn.p" --namespace="http://premon.fbk.eu/resource/" --short_namespace="pm"
 """
 import pickle
 from docopt import docopt
