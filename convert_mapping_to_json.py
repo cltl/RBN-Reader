@@ -10,6 +10,7 @@ Example:
 import pandas
 import os
 import json
+from collections import defaultdict
 from docopt import docopt
 
 arguments = arguments = docopt(__doc__)
@@ -23,14 +24,16 @@ assert os.path.exists(excel_path), f'{excel_path} does not exist'
 
 df = pandas.read_excel(excel_path, sheet_name='the_mapping')
 
-feature_set2top_frames = dict()
+feature_set2top_frames = defaultdict(list)
 
 for index, row in df.iterrows():
     feature_set = row['RBN feature set']
     frames = row['English FrameNet frames']
     frames = frames.split(',')
-    feature_set2top_frames[feature_set] = frames
 
+    for frame in frames:
+        if frame not in feature_set2top_frames[feature_set]:
+            feature_set2top_frames[feature_set].append(frame)
 
 with open(arguments['--json_output_path'], 'w') as outfile:
-    json.dump(feature_set2top_frames, outfile)
+    json.dump(feature_set2top_frames, outfile, indent=4, sort_keys=True)
