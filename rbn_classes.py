@@ -54,6 +54,11 @@ class LE:
         self.rbn_feature_set = None
         self.separable = None
 
+        self.sense_id = self.get_sense_id(le_xml_obj)
+        self.synset_id = self.get_synset_id(le_xml_obj)
+        self.definition = self.get_definition(le_xml_obj)
+        self.canonical_forms = self.get_canonical_forms(le_xml_obj)
+
         if not self.mw:
             self.rbn_pos = self.get_rbn_pos(le_xml_obj)
             self.simple_pos = self.get_simple_pos()
@@ -67,8 +72,17 @@ class LE:
         self.namespace = namespace
         self.abbreviated_namespace = abbreviated_namespace
         self.full_rdf_uri = f'{self.namespace}RBN-{self.id_}'
-        self.short_rdf_uri = f'{self.abbreviated_namespace}:RBN-{self.id_}'
+        self.short_rdf_uri = f'({self.abbreviated_namespace})RBN-{self.id_}'
 
+        self.hover_info = {
+            'pos' : self.fn_pos,
+            'lemma' : self.lemma,
+            'mw' : self.mw,
+            'rbn_type' : self.rbn_type,
+            'rbn_feature_set' : self.rbn_feature_set,
+            'definition' : self.definition,
+            'canonical_forms' : ';'.join(self.canonical_forms)
+        }
 
     def __str__(self):
         return f'{self.short_rdf_uri}, mw:{self.mw}, {self.lemma}, {self.rbn_pos}, {self.rbn_type}, {self.rbn_feature_set}'
@@ -82,6 +96,29 @@ class LE:
         lemma_el = le_xml_obj.find(child_label)
         lemma = lemma_el.get('writtenForm')
         return lemma
+
+    def get_sense_id(self, le_xml_obj):
+        sense_el = le_xml_obj.find('Sense')
+        sense_id = sense_el.get('senseId')
+        return sense_id
+
+    def get_definition(self, le_xml_obj):
+        sense_el = le_xml_obj.find('Sense')
+        definition = sense_el.get('definition')
+        return definition
+
+    def get_synset_id(self, le_xml_obj):
+        sense_el = le_xml_obj.find('Sense')
+        synset_id = sense_el.get('synset')
+        return synset_id
+
+    def get_canonical_forms(self, le_xml_obj):
+        canonical_forms = []
+        query = 'Sense/SenseExamples/SenseExample/canonicalForm'
+        for el in le_xml_obj.xpath(query):
+            canonical_form = el.get('canonicalform')
+            canonical_forms.append(canonical_form)
+        return canonical_forms
 
     def get_rbn_pos(self, le_xml_obj):
         rbn_pos = le_xml_obj.get('partOfSpeech')

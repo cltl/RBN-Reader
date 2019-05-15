@@ -22,6 +22,7 @@ For more information about how to use.
 
 ## TODO
 * implement *Relations_to_use*
+* node itself should always be returned
 
 ## Authors
 
