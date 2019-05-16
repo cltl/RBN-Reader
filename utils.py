@@ -109,3 +109,38 @@ def get_translations_from_wiktionary(path, verbose=0):
         english2dutch[english_lemma].add(dutch_lemma)
 
     return dutch2english, english2dutch
+
+
+def load_polysemy_info(le_objs, pos={'noun', 
+                                     'verb', 
+                                     'adjective',
+                                     'adverb',
+                                     'other'}):
+    """
+    """
+    lemma_pos2le_ids = defaultdict(set)
+    for le_obj in le_objs:
+        if le_obj.rbn_pos in pos:
+            key = (le_obj.lemma, le_obj.rbn_pos)
+            value = le_obj.id_
+            lemma_pos2le_ids[key].add(value)
+
+    list_of_lists = []
+    headers = ['lemma_pos', 'polysemy', 'LU ids']
+    for lemma_pos, le_ids in lemma_pos2le_ids.items():
+        one_row = [lemma_pos, len(le_ids), le_ids]
+        list_of_lists.append(one_row)
+
+    df = pandas.DataFrame(list_of_lists, columns=headers)
+    
+    freq_dict = Counter(df['polysemy'])
+    total = sum(freq_dict.values())
+    list_of_lists = []
+    headers = ['Polysemy class', 'Freq', '%']
+    for key, value in sorted(freq_dict.items()):
+        one_row = [key, value, round((100 * (value / total)),2)]
+        list_of_lists.append(one_row)
+    
+    distr_df = pandas.DataFrame(list_of_lists, columns=headers)
+    
+    return df, distr_df
