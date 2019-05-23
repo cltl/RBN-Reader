@@ -121,18 +121,23 @@ def load_polysemy_info(le_objs, pos={'noun',
     lemma_pos2le_ids = defaultdict(set)
     for le_obj in le_objs:
         if le_obj.rbn_pos in pos:
-            key = (le_obj.lemma, le_obj.rbn_pos)
-            value = le_obj.id_
+            key = (le_obj.lemma, le_obj.fn_pos)
+            value = le_obj.sense_id
             lemma_pos2le_ids[key].add(value)
 
     list_of_lists = []
     headers = ['lemma_pos', 'polysemy', 'LU ids']
+    
+    le_id2polysemy_of_lemma = dict()
     for lemma_pos, le_ids in lemma_pos2le_ids.items():
         one_row = [lemma_pos, len(le_ids), le_ids]
         list_of_lists.append(one_row)
+        
+        for le_id in le_ids:
+            le_id2polysemy_of_lemma[le_id] = len(le_ids)
 
     df = pandas.DataFrame(list_of_lists, columns=headers)
-    
+        
     freq_dict = Counter(df['polysemy'])
     total = sum(freq_dict.values())
     list_of_lists = []
@@ -140,7 +145,8 @@ def load_polysemy_info(le_objs, pos={'noun',
     for key, value in sorted(freq_dict.items()):
         one_row = [key, value, round((100 * (value / total)),2)]
         list_of_lists.append(one_row)
+        
     
     distr_df = pandas.DataFrame(list_of_lists, columns=headers)
     
-    return df, distr_df
+    return df, distr_df, lemma_pos2le_ids
