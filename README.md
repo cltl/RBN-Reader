@@ -21,8 +21,17 @@ python main.py -h
 For more information about how to use.
 
 ## TODO
-* implement *Relations_to_use*
-* node itself should always be returned
+* add adverbs and adjectives from RBN
+* provenance 
+* synset id 
+
+## Information
+
+The sense ids mean:
+* **r_**: RBN
+* **c_**: Cornetto
+* **o_**: -
+* **t_n**: translation
 
 ## Authors
 
