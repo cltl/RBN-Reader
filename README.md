@@ -1,6 +1,6 @@
-# RBN-Reader
+# ODWN-Reader
 
-The goal of this repository is to load [Referentie Bestand Nederland](http://tst.inl.nl/producten/rbn/rbn_documentatie_nl.pdf)
+The goal of this repository is to load Open Dutch WordNet
 into Python classes as well as compute descriptive statistics.
 
 ### Prerequisites
@@ -22,8 +22,8 @@ For more information about how to use.
 
 ## TODO
 * add adverbs and adjectives from RBN
-* provenance 
-* synset id 
+* RDF namespace of WordNet 3.0
+* synonymy information
 
 ## Information
 

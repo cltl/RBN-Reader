@@ -30,6 +30,39 @@ def extract_attribute_value_if_el_is_not_none(els, attribute_label, verbose=0):
 
     return '-'.join(values)
 
+
+class Synset:
+    """
+
+    """
+
+    def __init__(self, synset_xml_obj):
+        self.ili = self.get_ili(synset_xml_obj)
+        self.synset_id = self.get_synset_id(synset_xml_obj)
+        self.definition = self.get_definition(synset_xml_obj)
+
+        self.synonyms = []
+
+        self.hover_text = {
+            'synset identifier': self.synset_id,
+            'definition': self.definition
+        }
+
+    def get_ili(self, synset_xml_obj):
+        return synset_xml_obj.get('ili')
+
+    def get_synset_id(self, synset_xml_obj):
+        return synset_xml_obj.get('id')
+
+    def get_definition(self, synset_xml_obj):
+        def_el = synset_xml_obj.find('Definitions/Definition')
+        if def_el is not None:
+            return synset_xml_obj.find('Definitions/Definition').get('gloss')
+        else:
+            return ""
+
+
+
 class LE:
     """
 
@@ -61,6 +94,9 @@ class LE:
         self.rbn_type = None
         self.rbn_feature_set = None
         self.separable = None
+        self.provenance_set = None
+        self.provenance_label = None # how the synonym was added to a synset
+        self.synset_id = None # synset id to which it belongs in ODWN
 
         #self.synset_id = self.get_synset_id(le_xml_obj)
         self.canonical_forms = self.get_canonical_forms(le_xml_obj)

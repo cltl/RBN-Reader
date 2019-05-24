@@ -18,7 +18,7 @@ def compute_stats_about(le_objs, attributes, verbose=0):
     """
     observations = []
     
-    for le_obj in le_objs:
+    for le_obj in le_objs.values():
         observation = [getattr(le_obj, attr)
                        for attr in attributes]
         observations.append(tuple(observation))
@@ -119,7 +119,7 @@ def load_polysemy_info(le_objs, pos={'noun',
     """
     """
     lemma_pos2le_ids = defaultdict(set)
-    for le_obj in le_objs:
+    for le_obj in le_objs.values():
         if le_obj.rbn_pos in pos:
             key = (le_obj.lemma, le_obj.fn_pos)
             value = le_obj.sense_id
