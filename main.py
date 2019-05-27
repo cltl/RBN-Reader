@@ -98,6 +98,7 @@ for sense_id, synset_info in sense_id2synset_info.items():
         le_obj.provenance_set = synset_info['provenance_set']
         synset_id = synset_info['synset_id']
         le_obj.synset_id = synset_id
+        le_obj.hover_info['synset_id'] = synset_id
 
         if synset_id in synset_id2synset_obj:
             synset_obj = synset_id2synset_obj[synset_id]

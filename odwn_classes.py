@@ -1,6 +1,3 @@
-from lxml import etree
-
-
 def extract_attribute_value_if_el_is_not_none(els, attribute_label, verbose=0):
     """
     given xml element.
@@ -43,7 +40,7 @@ class Synset:
 
         self.synonyms = []
 
-        self.hover_text = {
+        self.hover_info = {
             'synset identifier': self.synset_id,
             'definition': self.definition
         }
@@ -98,7 +95,6 @@ class LE:
         self.provenance_label = None # how the synonym was added to a synset
         self.synset_id = None # synset id to which it belongs in ODWN
 
-        #self.synset_id = self.get_synset_id(le_xml_obj)
         self.canonical_forms = self.get_canonical_forms(le_xml_obj)
 
         self.rbn_pos = self.get_rbn_pos(le_xml_obj)
@@ -124,6 +120,7 @@ class LE:
             'rbn_feature_set' : self.rbn_feature_set,
             'definition' : self.definition,
             'canonical_forms' : ';'.join(self.canonical_forms.values()),
+            'synset_id' : self.synset_id
         }
 
     def __str__(self):
