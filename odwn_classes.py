@@ -40,9 +40,12 @@ class Synset:
 
         self.synonyms = []
 
-        self.hover_info = {
+    def get_hover_info(self):
+        return {
             'synset identifier': self.synset_id,
-            'definition': self.definition
+            'definition': self.definition,
+            'synonyms' : {rbn_obj.short_rdf_uri
+                          for rbn_obj in self.synonyms}
         }
 
     def get_ili(self, synset_xml_obj):
@@ -112,7 +115,12 @@ class LE:
         #    self.separable = self.get_separable(le_xml_obj)
 
 
-        self.hover_info = {
+    def __str__(self):
+        return str(self.get_hover_info())
+
+
+    def get_hover_info(self):
+        return {
             'pos' : self.fn_pos,
             'lemma' : self.lemma,
             'sense_label' : self.sense_label,
@@ -123,8 +131,6 @@ class LE:
             'synset_id' : self.synset_id
         }
 
-    def __str__(self):
-        return str(self.hover_info)
 
     def get_lemma(self, le_xml_obj):
         form_el = le_xml_obj.find('form')

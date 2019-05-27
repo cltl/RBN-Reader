@@ -24,6 +24,8 @@ For more information about how to use.
 * add adverbs and adjectives from RBN
 * RDF namespace of WordNet 3.0
 * synonymy information
+* add English information about synset
+* make hover_info a method in all classes instead of attribute
 
 ## Information
 
