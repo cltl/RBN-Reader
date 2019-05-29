@@ -5,7 +5,7 @@ Usage:
   main.py --orbn_path=<input_path> --odwn_path=<odwn_path> --output_folder=<output_folder> --allowed_prefixes=<allowed_prefixes> --exclude_sub_NUMBER=<include_sub_NUMBER> --namespace=<namespace> --short_namespace=<short_namespace>
 
 Options:
-    --orbn_path=<input_path> 'resources/orbn_1.0.xml'
+    --orbn_path=<input_path> 'resources/orbn_n-v-a.xml'
     --odwn_path=<odwn_path> 'resources/odwn_orbn_gwg-LMF_1.3.xml'
     --output_folder=<output_path> 'output/'
     --allowed_prefixes=<allowed_prefixes> prefixes separated by +. options are r | c | o | t
@@ -14,7 +14,7 @@ Options:
     --short_namespace=<short_namespace> e.g., pm
 
 Example:
-    python main.py --orbn_path="resources/orbn_1.0.xml" --odwn_path="resources/odwn_orbn_gwg-LMF_1.3.xml" --output_folder="output" --allowed_prefixes="r+c" --exclude_sub_NUMBER="True" --namespace="http://premon.fbk.eu/resource/" --short_namespace="pm"
+    python main.py --orbn_path="resources/orbn_n-v-a.xml" --odwn_path="resources/odwn_orbn_gwg-LMF_1.3.xml" --output_folder="output" --allowed_prefixes="r+c" --exclude_sub_NUMBER="True" --namespace="http://premon.fbk.eu/resource/" --short_namespace="pm"
 """
 import pickle
 from docopt import docopt

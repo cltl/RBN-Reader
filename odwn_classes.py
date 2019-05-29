@@ -181,7 +181,9 @@ class LE:
         sem_def_el = le_xml_obj.find(query)
         if sem_def_el is not None:
             definition = sem_def_el.text
-            assert definition
+            if definition is None:
+                if self.verbose >= 1:
+                    print(f'no definition for {self.sense_id} {definition}')
 
         return definition
 
@@ -202,7 +204,7 @@ class LE:
             return 'v'
         elif self.rbn_pos == 'noun':
             return 'n'
-        elif self.rbn_pos == 'adj':
+        elif self.rbn_pos in {'adj', 'adjective'}:
             return 'a'
         else:
             raise ValueError(f'could not map rbn part of speech: {self.rbn_pos}')
@@ -212,7 +214,7 @@ class LE:
             return 'V'
         elif self.rbn_pos == 'noun':
             return 'N'
-        elif self.rbn_pos == 'adj':
+        elif self.rbn_pos in {'adj', 'adjective'}:
             return 'A'
         else:
             raise ValueError(f'could not map rbn part of speech: {self.rbn_pos}')
