@@ -124,6 +124,7 @@ class LE:
             'pos' : self.fn_pos,
             'lemma' : self.lemma,
             'sense_label' : self.sense_label,
+            'sense_id' : self.sense_id,
             'rbn_type' : self.rbn_type,
             'rbn_feature_set' : self.rbn_feature_set,
             'definition' : self.definition,
@@ -156,6 +157,9 @@ class LE:
         else:
             pos = form_el.get('form-cat')
             pos = pos.lower()
+
+            if pos == 'adj':
+                pos = 'adjective'
 
         if not pos:
             self.add = False

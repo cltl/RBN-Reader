@@ -21,11 +21,10 @@ python main.py -h
 For more information about how to use.
 
 ## TODO
-* add adverbs and adjectives from RBN
+* solve situation of lemma, pos with inconsistent senseranks
 * RDF namespace of WordNet 3.0
 * synonymy information
 * add English information about synset
-* make hover_info a method in all classes instead of attribute
 
 ## Information
 
