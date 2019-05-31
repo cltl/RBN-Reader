@@ -22,6 +22,8 @@ from pathlib import Path
 from lxml import etree
 from odwn_classes import LE, Synset
 
+import utils
+
 
 # load arguments
 arguments = docopt(__doc__)
@@ -62,6 +64,14 @@ for le_xml_obj in orbn.xpath('cdb_lu'):
         sense_id2le_obj[le_obj.sense_id] = le_obj
     else:
         not_added.add(le_obj.sense_id)
+
+# inspect sense rankings
+inconsistent_ids = utils.get_inconsistent_senseranks(sense_id2le_obj, verbose=verbose)
+for inconsistent_id in inconsistent_ids:
+    del sense_id2le_obj[inconsistent_id]
+
+for inconsistent_id in inconsistent_ids:
+    assert inconsistent_id not in sense_id2le_obj
 
 # load synsets into classes
 synset_id2synset_obj = dict()

@@ -150,3 +150,34 @@ def load_polysemy_info(le_objs, pos={'noun',
     distr_df = pandas.DataFrame(list_of_lists, columns=headers)
     
     return df, distr_df, lemma_pos2le_ids
+
+
+def get_inconsistent_senseranks(rbn_objs, verbose=0):
+    inconsistent_ids = set()
+
+    lemma_pos2sense_ranks = defaultdict(list)
+    for le_obj in rbn_objs.values():
+
+        key = (le_obj.lemma, le_obj.rbn_pos)
+        value = int(le_obj.c_seq_nr)
+
+        if key not in lemma_pos2sense_ranks:
+            lemma_pos2sense_ranks[key] = {
+                'sense_ids': [],
+                'senseranks': []
+
+            }
+        if key in lemma_pos2sense_ranks:
+            lemma_pos2sense_ranks[key]['sense_ids'].append(le_obj.sense_id)
+            lemma_pos2sense_ranks[key]['senseranks'].append(value)
+
+    for (lemma, pos), info in lemma_pos2sense_ranks.items():
+
+        senseranks = info['senseranks']
+        if len(senseranks) != len(set(senseranks)):
+
+            inconsistent_ids.update(info['sense_ids'])
+            if verbose:
+                print(f'inconsistent sense ids for: {lemma} {pos}')
+                print(senseranks)
+    return inconsistent_ids
