@@ -21,10 +21,10 @@ python main.py -h
 For more information about how to use.
 
 ## TODO
-* solve situation of lemma, pos with inconsistent senseranks
 * RDF namespace of WordNet 3.0
 * synonymy information
 * add English information about synset
+* it seems that not all English WordNet synsets have an XML element in the LMF file
 
 ## Information
 

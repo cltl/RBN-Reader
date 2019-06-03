@@ -93,11 +93,19 @@ for le_el in odwn.xpath('Lexicon/LexicalEntry'):
         assert provenance_label
         assert provenance_set
         assert synset
-        sense_id2synset_info[sense_id] = {
-            'synset_id': synset,
-            'provenance_label': provenance_label,
-            'provenance_set': provenance_set
-        }
+
+        if synset == 'unknown_000':
+            continue
+
+        if synset in synset_id2synset_obj:
+            sense_id2synset_info[sense_id] = {
+                'synset_id': synset,
+                'provenance_label': provenance_label,
+                'provenance_set': provenance_set
+            }
+        else:
+            if verbose:
+                print(f'{synset} has no Synset xml element in LMF file')
 
 # update both LE and Synset with relation between synonym and synset
 for sense_id, synset_info in sense_id2synset_info.items():
