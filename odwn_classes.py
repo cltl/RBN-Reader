@@ -1,3 +1,26 @@
+
+def split_morphostructure(morphostructure, lemma, verbose=0):
+    parts = []
+
+    if morphostructure is not None:
+        morphostructure = morphostructure.replace('*', '')
+        morphostructure = morphostructure.replace(']', '[')
+        morphostructure = morphostructure.replace('<', '[')
+        morphostructure = morphostructure.replace('>', '[')
+        splitted = morphostructure.split('[')
+
+        parts = []
+        for split in splitted:
+            if split:
+                parts.append(split)
+
+        if ''.join(parts) != lemma:
+            parts = []
+            if verbose >= 4:
+                print(f'splits {splitted} do not join into original lemma {lemma}')
+
+    return parts
+
 def extract_attribute_value_if_el_is_not_none(els, attribute_label, verbose=0):
     """
     given xml element.
@@ -85,11 +108,14 @@ class LE:
         self.verbose = verbose
 
         self.lemma = self.get_lemma(le_xml_obj)
+        self.parts = []
 
         self.sense_label = None
         self.definition = None
         self.rbn_pos = None
         self.simple_pos = None
+        self.morpho_type = None
+        self.morpho_structure = None
         self.fn_pos = None
         self.rbn_type = None
         self.rbn_feature_set = None
@@ -106,14 +132,18 @@ class LE:
             self.definition = self.get_definition(le_xml_obj)
             self.fn_pos = self.get_fn_pos()
             self.sense_label = f'{self.lemma}-{self.simple_pos}-{self.c_seq_nr}'
+            self.morpho_type = self.get_morpho_type(le_xml_obj)
+            self.sem_type = self.get_sem_type(le_xml_obj)
+            self.morpho_structure = self.get_morpho_structure(le_xml_obj)
+            self.parts = split_morphostructure(morphostructure=self.morpho_structure,
+                                               lemma=self.lemma)
+
             self.full_rdf_uri = f'{self.namespace}RBN-{self.sense_label}'
             self.short_rdf_uri = f'({self.abbreviated_namespace})RBN-{self.sense_label}'
 
         if self.simple_pos == 'v':
-            self.rbn_type = self.get_rbn_type(le_xml_obj)
             self.rbn_feature_set = self.get_rbn_feature_set(le_xml_obj)
-        #    self.separable = self.get_separable(le_xml_obj)
-
+            #self.separable = self.get_separable(le_xml_obj)
 
     def __str__(self):
         return str(self.get_hover_info())
@@ -131,6 +161,69 @@ class LE:
             'canonical_forms' : ';'.join(self.canonical_forms.values()),
             'synset_id' : self.synset_id
         }
+
+    def get_fn_nltk_format(self,
+                           frame,
+                           provenance,
+                           status="Created",
+                           incorporated_fe=None,
+                           timestamp=None,
+                           optional_lu_attrs={}):
+        lu = {
+            "lexemes" : self.get_lexemes(),
+            "definition" : self.definition,
+            "status" : status,
+            "POS" : self.fn_pos,
+            "frame" : frame,
+            "provenance" : provenance,
+            "incorporated_fe" : incorporated_fe,
+            "timestamp" : timestamp,
+            "optional_lu_attrs" : optional_lu_attrs
+        }
+        return lu
+
+    def get_morpho_type(self, le_xml_obj):
+        morpho_type = None
+        morph_type_el = le_xml_obj.find(f'morphology_{self.rbn_pos}/morpho-type')
+
+        if morph_type_el is not None:
+            morpho_type = morph_type_el.text
+
+        return morpho_type
+
+    def get_lexemes(self):
+        lexemes = []
+
+        if self.morpho_type in {'simpmorph', 'derivation'}:
+            lexemes = [{
+                "order": "1",
+                "headword": "false",
+                "breakBefore": "false",
+                "POS": self.fn_pos,
+                "name": self.lemma
+            }]
+        elif self.morpho_type in {'compound'}:
+            for order, part in enumerate(self.parts, 1):
+
+                lexeme = {
+                    'order' : str(order),
+                    'breakBefore' : "false",
+                    "name" : part
+                }
+                if order < len(self.parts):
+                    lexeme['headword'] = 'false'
+
+                    if all([len(self.parts) == 3,
+                            order == 2,
+                            part in {'s', 'en'}]):
+                        lexeme['POS'] = 'I'
+                else:
+                    lexeme['headword'] = 'true'
+                    lexeme['POS'] = self.fn_pos
+
+                lexemes.append(lexeme)
+
+        return lexemes
 
 
     def get_lemma(self, le_xml_obj):
@@ -224,18 +317,25 @@ class LE:
             raise ValueError(f'could not map rbn part of speech: {self.rbn_pos}')
 
 
-    def get_rbn_type(self, le_xml_obj):
-        rbn_type_info = le_xml_obj.find('semantics_verb/sem-type')
+    def get_sem_type(self, le_xml_obj):
+        rbn_type_info = le_xml_obj.find(f'semantics_{self.rbn_pos}/sem-type')
 
         if rbn_type_info is None:
             semantic_type = None
         else:
             semantic_type = rbn_type_info.text
 
-        if semantic_type not in {'action', 'state', 'process'}:
-            semantic_type = None
-
         return semantic_type
+
+    def get_morpho_structure(self, le_xml_obj):
+        morpho_struc_el = le_xml_obj.find(f'morphology_{self.rbn_pos}/morpho-structure')
+
+        if morpho_struc_el is None:
+            morphostructure = None
+        else:
+            morphostructure = morpho_struc_el.text
+
+        return morphostructure
 
     def get_rbn_feature_set(self, le_xml_obj):
         rbn_type_info = le_xml_obj.find('semantics_verb/sem-caseframe/caseframe')
