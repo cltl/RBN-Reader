@@ -192,9 +192,12 @@ class LE:
         return morpho_type
 
     def get_lexemes(self):
-        lexemes = []
-
-        if self.morpho_type in {'simpmorph', 'derivation'}:
+        if self.morpho_type in {'simpmorph',
+                                'derivation',
+                                'zeroderivation',
+                                'xcompound',
+                                'xderivation',
+                                'x-compound'}:
             lexemes = [{
                 "order": "1",
                 "headword": "false",
@@ -202,7 +205,8 @@ class LE:
                 "POS": self.fn_pos,
                 "name": self.lemma
             }]
-        elif self.morpho_type in {'compound'}:
+        elif self.morpho_type in {'compound', 'phrasal'}:
+            lexemes = []
             for order, part in enumerate(self.parts, 1):
 
                 lexeme = {
@@ -222,6 +226,8 @@ class LE:
                     lexeme['POS'] = self.fn_pos
 
                 lexemes.append(lexeme)
+        else:
+            lexemes = []
 
         return lexemes
 
@@ -251,14 +257,13 @@ class LE:
             pos = form_el.get('form-cat')
             pos = pos.lower()
 
-            if pos == 'adj':
-                pos = 'adjective'
+            if pos == 'adjective':
+                pos = 'adj'
 
         if not pos:
             self.add = False
 
         return pos
-
 
     def get_sense_id(self, le_xml_obj):
         sense_el = le_xml_obj.find('Sense')
@@ -301,7 +306,7 @@ class LE:
             return 'v'
         elif self.rbn_pos == 'noun':
             return 'n'
-        elif self.rbn_pos in {'adj', 'adjective'}:
+        elif self.rbn_pos == 'adj':
             return 'a'
         else:
             raise ValueError(f'could not map rbn part of speech: {self.rbn_pos}')
@@ -311,7 +316,7 @@ class LE:
             return 'V'
         elif self.rbn_pos == 'noun':
             return 'N'
-        elif self.rbn_pos in {'adj', 'adjective'}:
+        elif self.rbn_pos == 'adj':
             return 'A'
         else:
             raise ValueError(f'could not map rbn part of speech: {self.rbn_pos}')
