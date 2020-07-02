@@ -219,7 +219,7 @@ class LE:
 
                     if all([len(self.parts) == 3,
                             order == 2,
-                            part in {'s', 'en'}]):
+                            part in {'s', 'e', 'en', 'n', 'ne', 'er'}]):
                         lexeme['POS'] = 'I'
                 else:
                     lexeme['headword'] = 'true'
