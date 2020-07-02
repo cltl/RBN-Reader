@@ -108,6 +108,7 @@ class LE:
         self.verbose = verbose
 
         self.lemma = self.get_lemma(le_xml_obj)
+        self.article = None
         self.parts = []
 
         self.sense_label = None
@@ -128,6 +129,7 @@ class LE:
 
         self.rbn_pos = self.get_rbn_pos(le_xml_obj)
         if self.rbn_pos is not None:
+            self.article = self.get_article(le_xml_obj)
             self.simple_pos = self.get_simple_pos()
             self.definition = self.get_definition(le_xml_obj)
             self.fn_pos = self.get_fn_pos()
@@ -190,6 +192,18 @@ class LE:
             morpho_type = morph_type_el.text
 
         return morpho_type
+
+
+    def get_article(self, le_xml_obj):
+        article_el = le_xml_obj.find(f'syntax_{self.rbn_pos}/sy-article')
+
+        if article_el is None:
+            article = None
+        else:
+            article = article_el.text
+
+        return article
+
 
     def get_lexemes(self):
         if self.morpho_type in {'simpmorph',
