@@ -171,8 +171,13 @@ class LE:
                            incorporated_fe=None,
                            timestamp=None,
                            optional_lu_attrs={}):
+
+        attributes_to_annotate = set()
+
+        lexemes, complete = self.get_lexemes()
+
         lu = {
-            "lexemes" : self.get_lexemes(),
+            "lexemes" : lexemes,
             "definition" : self.definition,
             "status" : status,
             "POS" : self.fn_pos,
@@ -182,7 +187,20 @@ class LE:
             "timestamp" : timestamp,
             "optional_lu_attrs" : optional_lu_attrs
         }
-        return lu
+
+        if not complete:
+            attributes_to_annotate.add('lexemes')
+
+        for attr in ['definition',
+                     'status',
+                     'POS',
+                     'frame',
+                     'provenance']:
+            value = lu[attr]
+            if not value:
+                attributes_to_annotate.add(attr)
+
+        return lu, attributes_to_annotate
 
     def get_morpho_type(self, le_xml_obj):
         morpho_type = None
@@ -206,6 +224,9 @@ class LE:
 
 
     def get_lexemes(self):
+
+        complete = False
+
         if self.morpho_type in {'simpmorph',
                                 'derivation',
                                 'zeroderivation',
@@ -219,6 +240,7 @@ class LE:
                 "POS": self.fn_pos,
                 "name": self.lemma
             }]
+            complete = True
         elif self.morpho_type in {'compound', 'phrasal'}:
             lexemes = []
             for order, part in enumerate(self.parts, 1):
@@ -243,7 +265,7 @@ class LE:
         else:
             lexemes = []
 
-        return lexemes
+        return lexemes, complete
 
 
     def get_lemma(self, le_xml_obj):
