@@ -1,5 +1,35 @@
 import pandas
+import pickle
+import sys
 from collections import defaultdict, Counter
+
+def load_orbn(path, package_dir):
+    sys.path.append(package_dir)
+    sense_id_to_sense_obj = pickle.load(open(path, 'rb'))
+    sys.path.remove(package_dir)
+    return sense_id_to_sense_obj
+
+def split_morphostructure(morphostructure, lemma, verbose=0):
+    parts = []
+
+    if morphostructure is not None:
+        morphostructure = morphostructure.replace('*', '')
+        morphostructure = morphostructure.replace(']', '[')
+        morphostructure = morphostructure.replace('<', '[')
+        morphostructure = morphostructure.replace('>', '[')
+        splitted = morphostructure.split('[')
+
+        parts = []
+        for split in splitted:
+            if split:
+                parts.append(split)
+
+        if ''.join(parts) != lemma:
+            parts = []
+            if verbose >= 4:
+                print(f'splits {splitted} do not join into original lemma {lemma}')
+
+    return parts
 
 def compute_stats_about(le_objs, attributes, verbose=0):
     """

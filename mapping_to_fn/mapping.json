@@ -1,0 +1,77 @@
+{
+    "cognt1": [
+        "Perception",
+        "Statement",
+        "Communication",
+        "Make_noise",
+        "Judgement",
+        "Judgement_communication",
+        "Compliance"
+    ],
+    "cognt2": [
+        "Perception",
+        "Statement",
+        "Communication",
+        "Make_noise",
+        "Judgement",
+        "Judgement_communication",
+        "Compliance"
+    ],
+    "cognt3": [
+        "Perception",
+        "Statement",
+        "Communication",
+        "Make_noise",
+        "Judgement",
+        "Judgement_communication",
+        "Compliance"
+    ],
+    "echprod2": [
+        "Transfer",
+        "Giving",
+        "Receiving"
+    ],
+    "echprod3": [
+        "Transfer",
+        "Giving",
+        "Receiving"
+    ],
+    "location1": [
+        "Being_attached",
+        "Being_detached"
+    ],
+    "location2": [
+        "Being_attached",
+        "Being_detached"
+    ],
+    "mvmt1": [
+        "Motion",
+        "Operate_vehicle_scenario",
+        "Traversing"
+    ],
+    "mvmt2": [
+        "Motion",
+        "Operate_vehicle_scenario",
+        "Traversing"
+    ],
+    "mvmt3": [
+        "Motion",
+        "Operate_vehicle_scenario",
+        "Traversing"
+    ],
+    "prmvmt1": [
+        "Motion",
+        "Operate_vehicle_scenario",
+        "Traversing"
+    ],
+    "prmvmt2": [
+        "Motion",
+        "Operate_vehicle_scenario",
+        "Traversing"
+    ],
+    "prmvmt3": [
+        "Motion",
+        "Operate_vehicle_scenario",
+        "Traversing"
+    ]
+}

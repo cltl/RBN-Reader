@@ -1,2 +1,2 @@
-pandas
-lxml
+pandas==0.24.2
+lxml==4.3.0.0
