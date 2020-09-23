@@ -116,6 +116,7 @@ class LE:
         self.rbn_pos = None
         self.simple_pos = None
         self.morpho_type = None
+        self.lu_type = None
         self.morpho_structure = None
         self.fn_pos = None
         self.rbn_type = None
@@ -135,6 +136,7 @@ class LE:
             self.fn_pos = self.get_fn_pos()
             self.sense_label = f'{self.lemma}-{self.simple_pos}-{self.c_seq_nr}'
             self.morpho_type = self.get_morpho_type(le_xml_obj)
+            self.lu_type = self.get_lu_type()
             self.sem_type = self.get_sem_type(le_xml_obj)
             self.morpho_structure = self.get_morpho_structure(le_xml_obj)
             self.parts = split_morphostructure(morphostructure=self.morpho_structure,
@@ -166,6 +168,7 @@ class LE:
 
     def get_fn_nltk_format(self,
                            frame,
+                           lu_name,
                            provenance,
                            status="Created",
                            incorporated_fe=None,
@@ -176,9 +179,15 @@ class LE:
 
         lexemes, complete = self.get_lexemes()
 
+        if self.lu_type is None:
+            complete = False
+            attributes_to_annotate.add('lu_type')
+
         lu = {
             "lexemes" : lexemes,
             "definition" : self.definition,
+            "lu_name" : lu_name,
+            "lu_type" : self.lu_type,
             "status" : status,
             "POS" : self.fn_pos,
             "frame" : frame,
@@ -223,16 +232,42 @@ class LE:
         return article
 
 
+    def get_lu_type(self):
+        if self.morpho_type in {'simpmorph',
+                                'derivation',
+                                'xderivation',
+                                'zeroderivation',
+                                'nmorph'}:
+            lu_type = 'singleton'
+        elif self.morpho_type in {'phrasal'}:
+            lu_type = 'phrasal'
+        elif self.morpho_type in {'xcompound',
+                                  'x-compound'}:
+            lu_type = 'exocentric compound'
+        elif self.morpho_type is None:
+            lu_type = None
+        elif self.morpho_type in {'compound',
+                                  'wordgroup',
+                                  'compderiv',
+                                  'derivcomp',
+                                  'unspecified',
+                                  'nil'}:
+            lu_type = None
+
+        else:
+            raise Exception(f'no mapping available for morphotype {self.morpho_type}')
+
+
+        return lu_type
+
     def get_lexemes(self):
 
         complete = False
 
-        if self.morpho_type in {'simpmorph',
-                                'derivation',
-                                'zeroderivation',
-                                'xcompound',
-                                'xderivation',
-                                'x-compound'}:
+        if self.lu_type is None:
+            lexemes = []
+        elif self.lu_type in {'singleton',
+                              'exocentric compound'}:
             lexemes = [{
                 "order": "1",
                 "headword": "false",
@@ -241,14 +276,14 @@ class LE:
                 "name": self.lemma
             }]
             complete = True
-        elif self.morpho_type in {'compound', 'phrasal'}:
+
+        elif self.morpho_type == 'compound':
             lexemes = []
             for order, part in enumerate(self.parts, 1):
-
                 lexeme = {
-                    'order' : str(order),
-                    'breakBefore' : "false",
-                    "name" : part
+                    'order': str(order),
+                    'breakBefore': "false",
+                    "name": part,
                 }
                 if order < len(self.parts):
                     lexeme['headword'] = 'false'
@@ -258,10 +293,30 @@ class LE:
                             part in {'s', 'e', 'en', 'n', 'ne', 'er'}]):
                         lexeme['POS'] = 'I'
                 else:
-                    lexeme['headword'] = 'true'
                     lexeme['POS'] = self.fn_pos
-
+                    lexeme['head'] = 'true'
                 lexemes.append(lexeme)
+
+        elif all([self.lu_type in {'phrasal'},
+                  len(self.parts) == 2]):
+
+            part_one, part_two = self.parts
+            lexemes = [
+                {
+                    'order' : '1',
+                    'breakBefore' : "false",
+                    "name" : part_one,
+                    "head": 'false',
+                },
+                {
+                    'order': '2',
+                    'breakBefore': "false",
+                    "name": part_two,
+                    "head": 'false',
+                    "POS": self.fn_pos
+                }
+            ]
+            complete = True
         else:
             lexemes = []
 
