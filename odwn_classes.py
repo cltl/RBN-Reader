@@ -306,13 +306,13 @@ class LE:
                     'order' : '1',
                     'breakBefore' : "false",
                     "name" : part_one,
-                    "head": 'false',
+                    "headword": 'false',
                 },
                 {
                     'order': '2',
                     'breakBefore': "false",
                     "name": part_two,
-                    "head": 'false',
+                    "headword": 'false',
                     "POS": self.fn_pos
                 }
             ]
