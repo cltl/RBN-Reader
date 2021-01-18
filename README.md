@@ -21,10 +21,10 @@ bash install.sh
 
 ## Functionality
 
-### Function 1: load RBN senses
+### Function 1: load ORBN senses
 ```python
-import ODWN_Reader
-senseid_to_sense_obj = ODWN_Reader.senseid_to_sense_obj
+import ODWN_reader
+senseid_to_sense_obj = ODWN_reader.senseid_to_sense_obj
 ```
 *senseid_to_sense_obj* is mapping from a sense identifier to a LE object.
 We included two types of sense identifiers:
@@ -35,11 +35,28 @@ The definition of the LE object is found in *odwn_classes.LE*.
 
 ### Function 2: load phrasal entries
 ```
-import ODWN_Reader
+import ODWN_reader
 verb_to_phrasal_entries = ODWN_Reader.verb_to_phrasal_entries
 ```
 *verb_to_phrasal_entries* conains a mapping from a verb head, e.g., "bieden",
 to all phrasal entries in RBN that are marked as "phrasal" (morpho_type == 'phrasal').
+
+### Function 3: ORBN in Lemon 
+You can load ORBN in Lemon the following way:
+
+```python 
+import ODWN_reader
+orbn_in_lemon = ODWN_reader.load_orbn_in_lemon(ODWN_reader.orbn_lemon_path)
+```
+
+### Function: mapping senseid to URI
+You can load a mapping from an ORBN sense id to a URI of the sense.
+
+```python
+import ODWN_reader 
+orbn_in_lemon = ODWN_reader.load_orbn_in_lemon(ODWN_reader.orbn_lemon_path)
+senseid_to_lu = ODWN_reader.get_senseid_to_lu_uri(orbn_in_lemon, verbose=2)
+```
 
 ## TODO
 * RDF namespace of WordNet 3.0
