@@ -1,4 +1,6 @@
 import os
+import json
+
 from rdflib import Graph
 
 from .utils import load_orbn
@@ -17,6 +19,7 @@ verb_to_phrasal_entries = get_verb_to_phrasal_entries(orbn_sense_id_to_obj=sense
 
 
 orbn_lemon_path = os.path.join(package_dir, 'output', 'orbn_1.0.ttl')
+path_senseid_to_uri = os.path.join(package_dir, 'output', 'orbn_1.0_senseid_to_uri.json')
 if not os.path.exists(orbn_lemon_path):
     rbn_pos_to_lexinfo = {
       "adj" : "http://www.lexinfo.net/ontology/3.0/lexinfo#adjective",
@@ -27,7 +30,7 @@ if not os.path.exists(orbn_lemon_path):
     lemon = Graph()
     lemon.parse(lemon_ttl_path, format='turtle')
 
-    rbn_in_lemon = convert_rbn_to_lemon(senseid_to_senseobj=senseid_to_sense_obj,
+    orbn_in_lemon = convert_rbn_to_lemon(senseid_to_senseobj=senseid_to_sense_obj,
                                         namespace='http://rdf.cltl.nl/rbn/',
                                         lemon=lemon,
                                         major_version=1,
@@ -36,6 +39,16 @@ if not os.path.exists(orbn_lemon_path):
                                         language='nld',
                                         output_path=orbn_lemon_path,
                                         verbose=2)
+
+    senseid_to_uri = get_senseid_to_lu_uri(orbn_in_lemon=orbn_in_lemon)
+
+    with open(path_senseid_to_uri, 'w') as outfile:
+        json.dump(senseid_to_uri, outfile)
+else:
+    with open(path_senseid_to_uri) as infile:
+        senseid_to_uri = json.load(infile)
+
+
 
 
 
