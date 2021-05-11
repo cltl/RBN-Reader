@@ -64,7 +64,8 @@ ODWN_reader.senseid_to_uri
 * it seems that not all English WordNet synsets have an XML element in the LMF file
 
 ## Authors
-* **Marten Postma** (m.c.postma@vu.nl)
+* **Piek Vossen** (piek.vossen@vu.nl)
+* **Marten Postma** 
 
 ## License
 
